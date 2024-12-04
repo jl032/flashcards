@@ -1,16 +1,28 @@
 import tkinter as tk
+from serializer import Serializer
 # import tkinter.ttk as ttk
 
-# from deck import Card, Deck
+from deck import Card, Deck
 
 WINDOW_WIDTH = 710
 WINDOW_HEIGHT = 485
 
-class Application(tk.Frame):
+class Application(tk.Tk):
     def __init__(self, master=None): 
         super().__init__(master)
-        self.pack(fill=tk.BOTH, expand=True)
         self.focus_set()
+        
+        self.menu_bar = tk.Menu()
+        
+        self.file_menu = tk.Menu(self.menu_bar, tearoff=0)
+        self.file_menu.add_command(label="New")
+        self.file_menu.add_command(label="Open")
+        self.file_menu.add_command(label="Import")
+        self.file_menu.add_separator()
+        self.file_menu.add_command(label="Exit", command=self.quit)
+        self.menu_bar.add_cascade(label="File", menu=self.file_menu)
+        
+        self.config(menu=self.menu_bar)
         
         # Frame controlling the flashcard
         self.cardframe = tk.Frame(master=self, width=WINDOW_WIDTH, height=WINDOW_HEIGHT//1.2, padx=5, pady=5)
@@ -101,5 +113,6 @@ class Counter(tk.Label):
     
         
 app = Application()
-app.master.title("Flashcards")
+app.title("Flashcards")
+app.wm_minsize(775, 450)
 app.mainloop()

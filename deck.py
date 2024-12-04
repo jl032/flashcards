@@ -11,17 +11,17 @@ class Card:
 class Deck:
     def __init__(self, count: int = 5):
         self.count = count
-        self.card_list = self.initialize_cards()
+        self.deck = self.initialize_cards()
         self.current = 0
         
     def initialize_cards(self) -> list[Card]: 
         return [Card("", "") for _ in range(self.count)]
     
     def get_current_card(self) -> Card:
-        return self.card_list[self.current]
+        return self.deck[self.current]
     
     def edit_current_card(self, question: str, answer: str) -> None: 
-        self.card_list[self.current].edit(question, answer)
+        self.deck[self.current].edit(question, answer)
     
     def get_next_card(self) -> Card:
         if self.current+1 < self.count:
@@ -32,3 +32,10 @@ class Deck:
         if self.current-1 >= 0: 
             self.current -= 1
         return self.get_current_card()
+    
+    def get_deck(self) -> list[Card]: 
+        return self.deck
+    
+    def add_card(self, question: str = "", answer: str = "") -> None: 
+        self.count += 1
+        self.deck.append(Card(question, answer))
