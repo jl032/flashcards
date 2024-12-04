@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "flashcards"
+version = "0.0.1"
+authors = [
+    {name = "Jonathan Li", email = "lijonathan0325@gmail.com"},
+]
+description = "A simple flashcard gui made from tkinter."
+readme = "README.md"
+requires-python = ">=3.7, <3.14"
+license = {file = "LICENSE"}
+dependencies = []
