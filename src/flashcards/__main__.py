@@ -9,6 +9,8 @@ WINDOW_HEIGHT = 485
 class Application(tk.Tk):
     def __init__(self, master=None): 
         super().__init__(master)
+        self.title("Flashcards")
+        self.wm_minsize(775, 450)
         self.focus_set()
         
         self.menu_bar = tk.Menu()
@@ -119,8 +121,7 @@ class EditCard(tk.Frame):
     def get_answer_text(self, *args): 
         return self.answer_entry.get("1.0", "end-1c")
     
-        
-app = Application()
-app.title("Flashcards")
-app.wm_minsize(775, 450)
-app.mainloop()
+
+if __name__ == "__main__":
+    app = Application()
+    app.mainloop()
