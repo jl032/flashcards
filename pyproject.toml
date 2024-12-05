@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "flashcards"
-version = "0.0.1"
+version = "1.0.0"
 authors = [
     {name = "Jonathan Li", email = "lijonathan0325@gmail.com"},
 ]
