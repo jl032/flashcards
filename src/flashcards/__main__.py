@@ -1,7 +1,7 @@
 import tkinter as tk
 from flashcards.data.serializer import Serializer
 from flashcards.viewmodels.deck import Card, Deck
-from flashcards.gui.navigation import Arrow, Counter, NavigationFrame
+from flashcards.gui.navigation import Arrow, NavigationFrame
 from flashcards.gui.cards import Flashcard, FlashcardDeck, EditCard
 
 WINDOW_WIDTH = 710
@@ -29,9 +29,12 @@ class Application(tk.Tk):
         self.bind("<Key-space>", self.test.on_click)
         self.bind("<KeyRelease-space>", self.test.on_release)
         self.bind("<Key-Left>", self.nagivationframe.left_arrow.on_click)
-        self.bind("<KeyRelease-Left>", self.left_arrow_release)
+        self.bind("<KeyRelease-Left>", self.nagivationframe.left_arrow_release)
         self.bind("<Key-Right>", self.nagivationframe.right_arrow.on_click)
-        self.bind("<KeyRelease-Right>", self.right_arrow_release)
+        self.bind("<KeyRelease-Right>", self.nagivationframe.right_arrow_release)
+        # self.bind("<Button-1>", self.on_click)
+        # self.bind("<ButtonRelease-1>", self.on_release)
+        # make arrows child objects of counter
         
     def create_menu_bar(self) -> None:
         self.menu_bar = tk.Menu()
@@ -54,18 +57,6 @@ class Application(tk.Tk):
         new_window.title("Create New Card")
         frame = EditCard(new_window)
         frame.pack(fill=tk.BOTH, expand=True)
-
-    def left_arrow_release(self, *args):
-        if self.nagivationframe.counter.previous(): 
-            self.nagivationframe.left_arrow.on_release()
-        else: 
-            self.nagivationframe.left_arrow.on_fail_release()
-
-    def right_arrow_release(self, *args):
-        if self.nagivationframe.counter.next(): 
-            self.nagivationframe.right_arrow.on_release()
-        else:
-            self.nagivationframe.right_arrow.on_fail_release()
 
 
 if __name__ == "__main__":

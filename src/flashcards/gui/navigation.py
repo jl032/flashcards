@@ -8,7 +8,7 @@ class Arrow(tk.Label):
         self.get_arrow()
         self.click = True
         self.bind("<Button-1>", self.on_click)
-        self.bind("<ButtonRelease-1>", self.on_release)
+        self.bind("<ButtonRelease-1>", self.get_release)
         
     def get_arrow(self) -> str:
         if self.direction == "left":
@@ -30,13 +30,27 @@ class Arrow(tk.Label):
         self["relief"] = "groove"
         self.click = True
         
+    def get_release(self, *args) -> None:
+        if self.direction == "left":
+            self.master.left_arrow_release(*args)
+        else: 
+            self.master.right_arrow_release(*args)
         
-class Counter(tk.Label):
-    def __init__(self, current, total, master=None): 
+
+class NavigationFrame(tk.Frame):
+    def __init__(self, width, height, current, total, master=None):
+        super().__init__(master=master, width=width, height=height//6.5, padx=5, pady=5)
         self.current = current
         self.total = total
-        super().__init__(master, text=self.get_label(), relief="groove")
-        self.pack(fill=tk.BOTH, side="left", expand=True)
+        self.left_arrow = Arrow("left", master=self)
+        self.right_arrow = Arrow("right", master=self)
+        self.counter = tk.Label(master=self, text=self.get_label(), relief="groove")
+        self.counter.pack(fill=tk.BOTH, side="left", expand=True)
+        self.pack(fill=tk.BOTH, expand=True)
+        self.bind("<Button-1>", self.test)
+        
+    def test(self, *args):
+        print(args)
         
     def get_label(self) -> str:
         return f"{self.current}/{self.total}"
@@ -44,7 +58,7 @@ class Counter(tk.Label):
     def next(self, *args) -> bool:
         if self.current < self.total:
             self.current += 1
-            self["text"] = self.get_label()
+            self.counter["text"] = self.get_label()
             return True
         else: 
             return False
@@ -52,15 +66,19 @@ class Counter(tk.Label):
     def previous(self, *args) -> bool:
         if self.current > 1: 
             self.current -= 1
-            self["text"] = self.get_label()
+            self.counter["text"] = self.get_label()
             return True
         else: 
             return False
-    
-class NavigationFrame(tk.Frame):
-    def __init__(self, width, height, current, total, master=None):
-        super().__init__(master=master, width=width, height=height//6.5, padx=5, pady=5)
-        self.left_arrow = Arrow("left", master=self)
-        self.right_arrow = Arrow("right", master=self)
-        self.counter = Counter(current, total, master=self)
-        self.pack(fill=tk.BOTH, expand=True)
+        
+    def left_arrow_release(self, *args):
+        if self.previous(): 
+            self.left_arrow.on_release()
+        else: 
+            self.left_arrow.on_fail_release()
+
+    def right_arrow_release(self, *args):
+        if self.next(): 
+            self.right_arrow.on_release()
+        else:
+            self.right_arrow.on_fail_release()
