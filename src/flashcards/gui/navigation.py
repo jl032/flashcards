@@ -3,14 +3,16 @@ import tkinter as tk
 class Arrow(tk.Label):
     def __init__(self, direction, master=None):
         self.direction = direction
-        super().__init__(master, text=self.get_arrow(), relief="groove")
-        self.pack(fill=tk.BOTH, side=self.direction, expand=True)
-        self.get_arrow()
         self.click = True
+        
+        super().__init__(master, text=self.get_arrow(), relief="groove")
+        self.pack(fill=tk.BOTH, side=direction, expand=True)
+        
         self.bind("<Button-1>", self.on_click)
         self.bind("<ButtonRelease-1>", self.get_release)
         
     def get_arrow(self) -> str:
+        """Gets string representation of arrow based on self.direction"""
         if self.direction == "left":
             return "<-"
         else: 
@@ -39,20 +41,19 @@ class Arrow(tk.Label):
 
 class NavigationFrame(tk.Frame):
     def __init__(self, width, height, current, total, master=None):
-        super().__init__(master=master, width=width, height=height//6.5, padx=5, pady=5)
         self.current = current
         self.total = total
+        
+        super().__init__(master=master, width=width, height=height//6.5, padx=5, pady=5)
+        self.pack(fill=tk.BOTH, expand=True)
+        
         self.left_arrow = Arrow("left", master=self)
         self.right_arrow = Arrow("right", master=self)
         self.counter = tk.Label(master=self, text=self.get_label(), relief="groove")
         self.counter.pack(fill=tk.BOTH, side="left", expand=True)
-        self.pack(fill=tk.BOTH, expand=True)
-        self.bind("<Button-1>", self.test)
-        
-    def test(self, *args):
-        print(args)
-        
+
     def get_label(self) -> str:
+        """Returns string representation of self.counter label"""
         return f"{self.current}/{self.total}"
     
     def next(self, *args) -> bool:
