@@ -1,22 +1,52 @@
 import tkinter as tk
+from flashcards.gui.navigation import NavigationFrame
 
-class Flashcard(tk.Label):
-    def __init__(self, question, answer, width=100, height=25, master=None):
-        self.master = master
-        self.question = question
-        self.answer = answer
-        super().__init__(master, text=self.question, width=width, height=height, relief="raised")
-        self.pack(fill=tk.BOTH, expand=True)
+class FlashcardDeck:
+    def __init__(self, count: int = 5, master=None):
+        self.count = count
+        self.current = 0
+        self.deck = self.initialize_deck()
+        self.card = tk.Label(master, text=self.deck[self.current][0], width=100, height=25, relief="raised")
+        self.card.pack(fill=tk.BOTH, expand=True)
+        self.card.bind("<Button-1>", self.on_click)
+        self.card.bind("<ButtonRelease-1>", self.on_release)
         self.click = True
-        self.bind("<Button-1>", self.on_click)
-        self.bind("<ButtonRelease-1>", self.on_release)
         
+        
+    def initialize_deck(self) -> list[tuple]: 
+        # return [Flashcard(f"{_}", f"{_+1}") for _ in range(self.count)]
+        return [
+            ("one", "1"), 
+            ("two", "2"),
+            ("three", "3"),
+            ("four", "4"), 
+            ("five", "5")
+        ]
+    
+    def get_deck(self) -> list[tuple]:
+        return self.deck
+    
+    def get_current_card(self) -> tuple:
+        return self.deck[self.current]
+    
+    def next_card(self) -> tuple:
+        if self.current+1 < self.count:
+            self.current += 1
+        self.card["text"] = self.deck[self.current][0]
+        return self.deck[self.current]
+    
+    def previous_card(self) -> tuple: 
+        if self.current > 0: 
+            self.current -= 1
+        self.card["text"] = self.deck[self.current][0]
+        return self.deck[self.current]
+    
     def flip(self, *args) -> None:
-        self["relief"] = "sunken"
-        if self["text"] == self.question: 
-            self["text"] = self.answer
-        elif self["text"] == self.answer: 
-            self["text"] = self.question
+        self.card["relief"] = "sunken"
+        if self.card["text"] == self.get_current_card()[0]: 
+            self.card["text"] = self.get_current_card()[1]
+        elif self.card["text"] == self.get_current_card()[1]: 
+            self.card["text"] = self.get_current_card()[0]
         
     def on_click(self, *args) -> None:
         if self.click:
@@ -24,18 +54,8 @@ class Flashcard(tk.Label):
             self.click = False
             
     def on_release(self, *args) -> None:
-        self["relief"] = "raised"
+        self.card["relief"] = "raised"
         self.click = True
-        
-        
-class FlashcardDeck:
-    def __init__(self, count: int = 5):
-        self.count = count
-        self.deck = self.initialize_cards()
-        self.current = 0
-        
-    def initialize_cards(self) -> list[Flashcard]: 
-        return [Flashcard("", "") for _ in range(self.count)]
         
 
 

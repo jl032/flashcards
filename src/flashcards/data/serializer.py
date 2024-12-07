@@ -1,5 +1,5 @@
 import os
-from viewmodels.deck import Card, Deck
+from flashcards.viewmodels.deck import Card, Deck
 
 class Serializer: 
     @classmethod

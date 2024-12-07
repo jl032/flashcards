@@ -25,7 +25,6 @@ class Arrow(tk.Label):
         
     def on_release(self, *args) -> None:
         self["relief"] = "groove"
-        print("go " + self.direction)
         self.click = True
         
     def on_fail_release(self, *args) -> None:
@@ -34,9 +33,9 @@ class Arrow(tk.Label):
         
     def get_release(self, *args) -> None:
         if self.direction == "left":
-            self.master.left_arrow_release(*args)
+            self.master.master.left_arrow_release(*args)
         else: 
-            self.master.right_arrow_release(*args)
+            self.master.master.right_arrow_release(*args)
         
 
 class NavigationFrame(tk.Frame):
@@ -72,14 +71,18 @@ class NavigationFrame(tk.Frame):
         else: 
             return False
         
-    def left_arrow_release(self, *args):
+    def left_arrow_release(self, *args) -> bool:
         if self.previous(): 
             self.left_arrow.on_release()
+            return True
         else: 
             self.left_arrow.on_fail_release()
+            return False
 
-    def right_arrow_release(self, *args):
+    def right_arrow_release(self, *args) -> bool:
         if self.next(): 
             self.right_arrow.on_release()
+            return True
         else:
             self.right_arrow.on_fail_release()
+            return False

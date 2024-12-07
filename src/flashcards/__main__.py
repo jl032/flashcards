@@ -1,8 +1,8 @@
 import tkinter as tk
 from flashcards.data.serializer import Serializer
 from flashcards.viewmodels.deck import Card, Deck
-from flashcards.gui.navigation import Arrow, NavigationFrame
-from flashcards.gui.cards import Flashcard, FlashcardDeck, EditCard
+from flashcards.gui.navigation import NavigationFrame
+from flashcards.gui.cards import FlashcardDeck, EditCard
 
 WINDOW_WIDTH = 710
 WINDOW_HEIGHT = 485
@@ -19,22 +19,21 @@ class Application(tk.Tk):
         
         # Frame controlling the flashcard
         self.cardframe = tk.Frame(master=self, width=WINDOW_WIDTH, height=WINDOW_HEIGHT//1.2, padx=5, pady=5)
-        self.test = Flashcard("hello", "hi", master=self.cardframe)
+        self.flashcard_deck = FlashcardDeck(5, master=self.cardframe)
+        self.flashcard_deck.get_current_card()
         self.cardframe.pack(fill=tk.BOTH, expand=True)
+        
         
         # Frame controlling navigation between flashcards
         self.nagivationframe = NavigationFrame(WINDOW_WIDTH, WINDOW_HEIGHT, 1, 5, self)
         
         # Bindings
-        self.bind("<Key-space>", self.test.on_click)
-        self.bind("<KeyRelease-space>", self.test.on_release)
+        self.bind("<Key-space>", self.flashcard_deck.on_click)
+        self.bind("<KeyRelease-space>", self.flashcard_deck.on_release)
         self.bind("<Key-Left>", self.nagivationframe.left_arrow.on_click)
-        self.bind("<KeyRelease-Left>", self.nagivationframe.left_arrow_release)
+        self.bind("<KeyRelease-Left>", self.left_arrow_release)
         self.bind("<Key-Right>", self.nagivationframe.right_arrow.on_click)
-        self.bind("<KeyRelease-Right>", self.nagivationframe.right_arrow_release)
-        # self.bind("<Button-1>", self.on_click)
-        # self.bind("<ButtonRelease-1>", self.on_release)
-        # make arrows child objects of counter
+        self.bind("<KeyRelease-Right>", self.right_arrow_release)
         
     def create_menu_bar(self) -> None:
         self.menu_bar = tk.Menu()
@@ -57,6 +56,14 @@ class Application(tk.Tk):
         new_window.title("Create New Card")
         frame = EditCard(new_window)
         frame.pack(fill=tk.BOTH, expand=True)
+        
+    def left_arrow_release(self, *args):
+        if self.nagivationframe.left_arrow_release(): 
+            self.flashcard_deck.previous_card()
+            
+    def right_arrow_release(self, *args):
+        if self.nagivationframe.right_arrow_release():
+            self.flashcard_deck.next_card()
 
 
 if __name__ == "__main__":
