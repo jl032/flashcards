@@ -71,6 +71,11 @@ class NavigationFrame(tk.Frame):
         else: 
             return False
         
+    def set_count(self, current: int, total: int):
+        self.current = current
+        self.total = total
+        self.counter["text"] = self.get_label()
+        
     def left_arrow_release(self, *args) -> bool:
         if self.previous(): 
             self.left_arrow.on_release()

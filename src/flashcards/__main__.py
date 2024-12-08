@@ -10,7 +10,6 @@ WINDOW_HEIGHT = 485
 class Application(tk.Tk):
     def __init__(self, master=None): 
         super().__init__(master)
-        self.title("Flashcards")
         self.wm_minsize(775, 450)
         self.focus_set()
         
@@ -19,13 +18,15 @@ class Application(tk.Tk):
         
         # Frame controlling the flashcard
         self.cardframe = tk.Frame(master=self, width=WINDOW_WIDTH, height=WINDOW_HEIGHT//1.2, padx=5, pady=5)
-        self.flashcard_deck = FlashcardDeck(5, master=self.cardframe)
+        self.flashcard_deck = FlashcardDeck(Deck("yay", [Card("one", "1")]), master=self.cardframe)
         self.flashcard_deck.get_current_card()
         self.cardframe.pack(fill=tk.BOTH, expand=True)
         
+        self.title(self.flashcard_deck.get_title())
+        
         
         # Frame controlling navigation between flashcards
-        self.nagivationframe = NavigationFrame(WINDOW_WIDTH, WINDOW_HEIGHT, 1, 5, self)
+        self.nagivationframe = NavigationFrame(WINDOW_WIDTH, WINDOW_HEIGHT, 1, self.flashcard_deck.get_length(), self)
         
         # Bindings
         self.bind("<Key-space>", self.flashcard_deck.on_click)
@@ -39,7 +40,7 @@ class Application(tk.Tk):
         self.menu_bar = tk.Menu()
         
         self.file_menu = tk.Menu(self.menu_bar, tearoff=0)
-        self.file_menu.add_command(label="New")
+        self.file_menu.add_command(label="New", command=self.create_new_deck)
         self.file_menu.add_command(label="Open")
         self.file_menu.add_command(label="Open from File")
         self.file_menu.add_command(label="Import")
@@ -52,10 +53,26 @@ class Application(tk.Tk):
         self.menu_bar.add_cascade(label="Edit", menu=self.edit_menu)
         
     def create_new_card(self): 
-        new_window = tk.Toplevel(self)
-        new_window.title("Create New Card")
-        frame = EditCard(new_window)
+        self.new_window = tk.Toplevel(self)
+        self.new_window.title("Create New Card")
+        frame = EditCard(self.new_window)
         frame.pack(fill=tk.BOTH, expand=True)
+        
+    def create_new_deck(self):
+        self.new_window = tk.Toplevel(self, padx=5, pady=5)
+        self.new_window.title("Create New Deck")
+        title = tk.Label(master=self.new_window, text="Title: ")
+        title.pack(fill=tk.BOTH, expand=True, side="left")
+        self.entry = tk.Text(master=self.new_window, width=25, height=1)
+        self.entry.pack(fill=tk.BOTH, expand=True, side="right")
+        self.entry.bind("<Key-Return>", self._create_new_deck)
+    
+    def _create_new_deck(self, *args):
+        title = self.entry.get("1.0", "end-1c")
+        self.entry.destroy()
+        self.new_window.destroy()
+        self.flashcard_deck.load_new_deck(title, [Card("", "")])
+        self.nagivationframe.set_count(0, 0)
         
     def left_arrow_release(self, *args):
         if self.nagivationframe.left_arrow_release(): 

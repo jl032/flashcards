@@ -9,13 +9,22 @@ class Card:
 
 
 class Deck:
-    def __init__(self, count: int = 5):
-        self.count = count
-        self.deck = self.initialize_cards()
+    def __init__(self, title: str, cards: list[Card]):
+        self.count = len(cards)
+        self.title = title
+        # self.deck = self.initialize_cards()
+        self.deck = cards
         self.current = 0
         
-    def initialize_cards(self) -> list[Card]: 
-        return [Card("", "") for _ in range(self.count)]
+    # def initialize_cards(self) -> list[Card]: 
+    #     # return [Card("", "") for _ in range(self.count)]
+    #     return [
+    #         Card("one", "1"), 
+    #         Card("two", "2"),
+    #         Card("three", "3"),
+    #         Card("four", "4"), 
+    #         Card("five", "5")
+    #     ]
     
     def get_current_card(self) -> Card:
         return self.deck[self.current]
@@ -35,6 +44,12 @@ class Deck:
     
     def get_deck(self) -> list[Card]: 
         return self.deck
+    
+    def get_title(self) -> str:
+        return self.title
+    
+    def get_length(self) -> int:
+        return self.count
     
     def add_card(self, question: str = "", answer: str = "") -> None: 
         self.count += 1
