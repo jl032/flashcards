@@ -10,6 +10,12 @@ class FlashcardDeck:
         self.card.bind("<ButtonRelease-1>", self.on_release)
         self.click = True
     
+    def add_new_card(self, question: str, answer: str): 
+        if self.deck.get_deck()[0].question == "" and self.deck.get_deck()[0].answer == "" and len(self.deck.get_deck()) == 1:
+            self.deck.deck.pop()
+        self.deck.add_new_card(question, answer)
+        self.get_current_card()
+    
     def get_deck(self) -> Deck:
         return self.deck
     
@@ -37,6 +43,9 @@ class FlashcardDeck:
     
     def get_length(self) -> int:
         return self.deck.get_length()
+    
+    def get_current_index(self) -> int: 
+        return self.deck.current+1
     
     def load_new_deck(self, title: str, cards: list[Card]) -> None:
         self.deck = Deck(title, cards)

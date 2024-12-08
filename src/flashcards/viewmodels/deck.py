@@ -26,6 +26,10 @@ class Deck:
     #         Card("five", "5")
     #     ]
     
+    def add_new_card(self, question: str, answer: str):
+        self.deck.append(Card(question, answer))
+        self.count = len(self.deck)
+    
     def get_current_card(self) -> Card:
         return self.deck[self.current]
     
